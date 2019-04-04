@@ -3,6 +3,7 @@
     --darkmodeblack:#212121;
     --darkmode-primary-black:#263238;
     --darkmodegreen:#8dc63f;
+    --black:#000000;
     --blue:#007bff;
     --indigo:#6610f2;
     --purple:#6f42c1;
@@ -44,7 +45,7 @@ html{
 article,aside,figcaption,figure,footer,header,hgroup,main,nav,section{
     display:block
 }
-body{
+body.light-mode {
     margin:0;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     font-size:1rem;
@@ -56,6 +57,16 @@ body{
     background-color:var(--white); 
     /*background-color:var(--darkmodeblack);*/
 }
+body.dark-mode {
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size:1rem;
+    font-weight:400;
+    line-height:1.5;
+    color:var(--darkmodegreen);
+    text-align:left;
+    background-color:var(--darkmodeblack);
+}
 [tabindex="-1"]:focus{
     outline:0!important
 }
@@ -64,9 +75,10 @@ hr{
     height:0;
     overflow:visible
 }
-h1,h2,h3,h4,h5,h6{
+body.light-mode h1,h2,h3,h4,h5,h6{
     margin-top:0;
-    margin-bottom:.5rem
+    margin-bottom:.5rem;
+    color: #000000;
 }
 p{
     margin-top:0;
@@ -119,8 +131,14 @@ sub{
 sup{
     top:-.5em
 }
-a{
+body.light-mode a{
     color:#007bff;
+    text-decoration:none;
+    background-color:transparent
+}
+body.dark-mode a{
+    /*color:#007bff;*/
+    color:var(--darkmodegreen);
     text-decoration:none;
     background-color:transparent
 }
@@ -187,11 +205,18 @@ button:focus{
     outline:1px dotted;
     outline:5px auto -webkit-focus-ring-color
 }
-button,input,optgroup,select,textarea{
+body.light-mode button,input,optgroup,select,textarea{
     margin:0;
     font-family:inherit;
     font-size:inherit;
     line-height:inherit
+}
+body.dark-mode button,input,optgroup,select,textarea{
+    margin:0;
+    font-family:inherit;
+    font-size:inherit;
+    line-height:inherit;
+    color:var(--darkmodegreen);
 }
 button,input{
     overflow:visible
@@ -270,13 +295,14 @@ template{
 [hidden]{
     display:none!important
 }
-.h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6{
+body.light-mode .h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6{
     margin-bottom:.5rem;
     font-weight:500;
-    line-height:1.2
+    line-height:1.2;
+    color: #000000;
 }
 .h1,h1{
-    font-size:2.5rem
+    font-size:2.5rem;
 }
 .h2,h2{
     font-size:2rem
@@ -292,6 +318,13 @@ template{
 }
 .h6,h6{
     font-size:1rem
+}
+body.dark-mode .h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6{
+    margin-bottom:.5rem;
+    font-weight:500;
+    line-height:1.2;
+    /* color: #000000; */
+    color:var(--darkmodegreen);
 }
 .lead{
     font-size:1.25rem;
@@ -3408,13 +3441,25 @@ input[type=button].btn-block,input[type=reset].btn-block,input[type=submit].btn-
 .navbar-dark .navbar-text a:focus,.navbar-dark .navbar-text a:hover{
     color:#fff
 }
-.card{
+body.light-mode .card{
     position:relative;
     display:flex;
     flex-direction:column;
     min-width:0;
     word-wrap:break-word;
     background-color:#fff;
+    background-clip:border-box;
+    border:1px solid rgba(0,0,0,.125);
+    border-radius:.25rem
+}
+body.dark-mode .card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+    word-wrap:break-word;
+    /*background-color:#fff;*/
+    background-color:var(--darkmode-primary-black);
     background-clip:border-box;
     border:1px solid rgba(0,0,0,.125);
     border-radius:.25rem
@@ -7638,8 +7683,12 @@ body{
 .time{
     font-size:4rem
 }
-.time #txt{
+body.light-mode .time #txt{
     line-height:70px
+}
+body.dark-mode .time #txt{
+    line-height:70px;
+    color:var(--darkmodegreen);
 }
 .card{
     border-radius:8px;
@@ -7651,28 +7700,52 @@ body{
 .card .card-title{
     padding:6px 0 3px
 }
-.card .card-title h2{
+body.light-mode .card .card-title h2{
     font-size:16px;
     font-weight:500;
     color:#5f6368;
     margin-bottom:0
 }
+body.dark-mode .card .card-title h2{
+    font-size:16px;
+    font-weight:500;
+    /*color:#5f6368;*/
+    color:var(--darkmodegreen);
+    margin-bottom:0
+}
 .card .card-subtitle hr{
     margin:0
 }
-.current-weather{
+body.light-mode .current-weather{
     font-size:14px;
     color:#3c4043;
     font-weight:500;
     line-height:28px;
     margin-bottom:12px
 }
-.current-weather .weather-type{
+body.light-mode .current-weather .weather-type{
     margin-top:8px
 }
-.current-weather .number{
+body.light-mode .current-weather .number{
     font-size:28px;
     color:#3c4043;
+    font-weight:400
+}
+body.dark-mode .current-weather{
+    font-size:14px;
+    /*color:#3c4043;*/
+    color:var(--darkmodegreen);
+    font-weight:500;
+    line-height:28px;
+    margin-bottom:12px
+}
+body.dark-mode .current-weather .weather-type{
+    margin-top:8px
+}
+body.dark-mode .current-weather .number{
+    font-size:28px;
+    color:var(--darkmodegreen);
+	/*color:#3c4043;*/
     font-weight:400
 }
 .current-weather .number .unit{
@@ -7680,20 +7753,34 @@ body{
     font-weight:500;
     margin-left:2px
 }
-.forecast .day{
+body.light-mode .forecast .day{
     display:block;
     font-size:14px;
     color:#3c4043;
+    font-weight:500
+}
+body.dark-mode .forecast .day{
+    display:block;
+    font-size:14px;
+    color:var(--darkmodegreen);
+    /*color:#3c4043;*/
     font-weight:500
 }
 .weather-icon-forecast{
     width:100%;
     max-height:50px
 }
-.high-low{
+body.light-mode .high-low{
     font-size:12px;
     text-align:center;
     color:#3c4043;
+    line-height:18px
+}
+body.dark-mode .high-low{
+    font-size:12px;
+    text-align:center;
+    /*color:#3c4043;*/
+    color:var(--darkmodegreen);
     line-height:18px
 }
 .high-low .high{
@@ -7702,8 +7789,20 @@ body{
 .high-low .low{
     opacity:.9
 }
-.searchbox{
+body.light-mode .searchbox{
     background:#fff;
+    display:flex;
+    border:1px solid #dfe1e5;
+    box-shadow:none;
+    width:632px;
+    border-radius:24px;
+    z-index:3;
+    height:44px;
+    margin:0 auto
+}
+body.dark-mode .searchbox{
+    /*background:#fff;*/
+    background:var(--darkmode-primary-black);
     display:flex;
     border:1px solid #dfe1e5;
     box-shadow:none;
@@ -7757,11 +7856,18 @@ body{
     content:'\0000a0\002022\0000a0';
     margin-right:.4rem
 }
-.headlines .meta{
+body.light-mode .headlines .meta{
     font-size:12px;
     color:inherit;
     opacity:.7
 }
+body.dark-mode .headlines .meta{
+    font-size:12px;
+    /*color:inherit;*/
+    color:var(--darkmodegreen);
+    opacity:.7
+}
+/*THIS IS AN ADDITION TO THE CODE FOR A TOGGLE SWITCH*/
 .switch-input {
   display: none;
 }
@@ -7811,11 +7917,11 @@ body{
 .switch-input:checked + .switch-label:before {
   background-color: #A5D6A7;
 }
-.switch-input:checked + .switch-label:after {
-  background-color: var(--darkmodegreen);
-  -ms-transform: translate(80%, -50%);
-  -webkit-transform: translate(80%, -50%);
-  transform: translate(80%, -50%);
+body.dark-mode .switch-input:checked + .switch-label:after {
+    background-color: var(--darkmodegreen);
+    -ms-transform: translate(80%, -50%);
+    -webkit-transform: translate(80%, -50%);
+    transform: translate(80%, -50%);
 }
 .switch-input:checked + .switch-label .toggle--on {
   display: inline-block;

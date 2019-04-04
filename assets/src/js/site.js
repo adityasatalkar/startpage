@@ -1,17 +1,3 @@
-// function getZipCode() {
-// 	var txt;
-// 	var zipcode = prompt("Please enter your ZipCode:", "");
-// 	document.cookie = "Zipcode="+zipcode;
-// 	txt = document.cookie;
-// 	console.log('Cookie : ' + getCookie());
-// 	// if (zipcode == null || zipcode == "") {
-// 	// 	txt = "User cancelled the prompt.";
-// 	// } else {
-// 	// 	txt = "You entered " + zipcode + ".";
-// 	// }
-// 	get5DaysWeatherForecast(zipcode);
-// }
-
 var accuweatherAPIKey = '<API_KEY>';
 var newsapiOrgKey = '<API_KEY>';
 
@@ -80,28 +66,11 @@ function getCityNameFromZipCode(zipcode) {
 
 function populateCityNameFromZipCode(response) {
 	console.log("City " + response[0].LocalizedName);
-	// var node1 = document.createElement("div");
-	// node1.setAttribute("class", "card-title");
 
-	// var h2 = document.createElement("h2");
 	var h2 = document.getElementById("city-name");
 	h2.innerHTML = response[0].LocalizedName + ", " + response[0].AdministrativeArea.ID;
+
 	console.log(response[0].LocalizedName + ", " + response[0].AdministrativeArea.ID);
-
-	// node1.appendChild(h2);
-
-	// document.getElementById("city-name").appendChild(node1);
-	// console.log(node1);
-	
-	// var node2 = document.createElement("div");
-	// node2.setAttribute("class", "card-subtitle mb-2 text-muted");
-
-	// var hr = document.createElement("hr");
-	// node2.appendChild(hr);
-	// // node1.appendChild(node2);
-
-	// document.getElementById("city-name").appendChild(node2);
-	// console.log(node2);
 }
 
 function getCurrentWeatherCondition(zipcode) {
@@ -471,27 +440,17 @@ window.onload = function() {
 	getNews();
 }
 
-function changeColor(tagName, color) {
-	// body...
-	var links = document.getElementsByTagName(tagName);
-	for(var i=0;i<links.length;i++){
-		if(links[i].href) {
-			links[i].style.color = color;  
-		}
-	}
-}
+// function changeCSS(cssFile, cssLinkIndex) {
 
-function changeCSS(cssFile, cssLinkIndex) {
+//     var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
 
-    var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
+//     var newlink = document.createElement("link");
+//     newlink.setAttribute("rel", "stylesheet");
+//     newlink.setAttribute("type", "text/css");
+//     newlink.setAttribute("href", cssFile);
 
-    var newlink = document.createElement("link");
-    newlink.setAttribute("rel", "stylesheet");
-    newlink.setAttribute("type", "text/css");
-    newlink.setAttribute("href", cssFile);
-
-    document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
-}
+//     document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
+// }
 
 document.addEventListener('DOMContentLoaded', function () {
 	var checkbox = document.querySelector('input[type="checkbox"]');
@@ -499,28 +458,28 @@ document.addEventListener('DOMContentLoaded', function () {
 	checkbox.addEventListener('change', function () {
 		if (checkbox.checked) {
 			// Dark Mode is ON!
-			// console.log('Checked');
-			// var darkmodeGreenColor = 'var(--darkmodegreen)';
+			// var cssFilePath = 'assets/build/css/darkmode.css';
+			// changeCSS(cssFilePath,0);
 
-			// document.body.style.backgroundColor = 'var(--iseblack)';
-			// document.body.style.color = darkmodeGreenColor; // #212529
-
-			// var aTag = 'a';
-			// changeColor(aTag, darkmodeGreenColor);
-			var cssFilePath = 'assets/build/css/darkmode.css';
-			changeCSS(cssFilePath,0);
+			var currentClass = document.getElementById("body").className;
+			// body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
+			if(currentClass == "light-mode") {
+				body.className = "dark-mode";
+			} else {
+				body.className = "light-mode";
+			}
 		} else {
 			// Dark Mode is OFF!
-			// var blackColor = 'rgba(0,0,0)';
-			// console.log('Not checked');
-			// document.body.style.backgroundColor = 'var(--white)';
-			// document.body.style.color = 'rgba(0,0,0,.87)';
+			// var cssFilePath = 'assets/build/css/all.min.css';
+			// changeCSS(cssFilePath,0);
 
-
-			// var aTag = 'a';
-			// changeColor(aTag, blackColor);
-			var cssFilePath = 'assets/build/css/all.min.css';
-			changeCSS(cssFilePath,0);
+			var currentClass = document.getElementById("body").className;
+			// body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
+			if(currentClass == "dark-mode") {
+				body.className = "light-mode";
+			} else {
+				body.className = "dark-mode";
+			}
 		}
 	});
 });

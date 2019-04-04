@@ -44,7 +44,7 @@ html{
 article,aside,figcaption,figure,footer,header,hgroup,main,nav,section{
     display:block
 }
-body{
+body.dark-mode{
     margin:0;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     font-size:1rem;
@@ -117,7 +117,7 @@ sub{
 sup{
     top:-.5em
 }
-a{
+body.dark-mode a{
     /*color:#007bff;*/
     color:var(--darkmodegreen);
     text-decoration:none;
@@ -182,7 +182,7 @@ button:focus{
     outline:1px dotted;
     outline:5px auto -webkit-focus-ring-color
 }
-button,input,optgroup,select,textarea{
+body.dark-mode button,input,optgroup,select,textarea{
     margin:0;
     font-family:inherit;
     font-size:inherit;
@@ -266,7 +266,7 @@ template{
 [hidden]{
     display:none!important
 }
-.h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6{
+body.dark-mode .h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6{
     margin-bottom:.5rem;
     font-weight:500;
     line-height:1.2;
@@ -3405,7 +3405,7 @@ input[type=button].btn-block,input[type=reset].btn-block,input[type=submit].btn-
 .navbar-dark .navbar-text a:focus,.navbar-dark .navbar-text a:hover{
     color:#fff
 }
-.card{
+body.dark-mode .card{
     position:relative;
     display:flex;
     flex-direction:column;
@@ -7636,7 +7636,7 @@ body{
 .time{
     font-size:4rem;
 }
-.time #txt{
+body.dark-mode .time #txt{
     line-height:70px;
     color:var(--darkmodegreen);
 }
@@ -7650,7 +7650,7 @@ body{
 .card .card-title{
     padding:6px 0 3px
 }
-.card .card-title h2{
+body.dark-mode .card .card-title h2{
     font-size:16px;
     font-weight:500;
     /*color:#5f6368;*/
@@ -7660,7 +7660,7 @@ body{
 .card .card-subtitle hr{
     margin:0
 }
-.current-weather{
+body.dark-mode .current-weather{
     font-size:14px;
     /*color:#3c4043;*/
     color:var(--darkmodegreen);
@@ -7668,10 +7668,10 @@ body{
     line-height:28px;
     margin-bottom:12px
 }
-.current-weather .weather-type{
+body.dark-mode .current-weather .weather-type{
     margin-top:8px
 }
-.current-weather .number{
+body.dark-mode .current-weather .number{
     font-size:28px;
     color:var(--darkmodegreen);
 	/*color:#3c4043;*/
@@ -7682,7 +7682,7 @@ body{
     font-weight:500;
     margin-left:2px
 }
-.forecast .day{
+body.dark-mode .forecast .day{
     display:block;
     font-size:14px;
     color:var(--darkmodegreen);
@@ -7693,7 +7693,7 @@ body{
     width:100%;
     max-height:50px
 }
-.high-low{
+body.dark-mode .high-low{
     font-size:12px;
     text-align:center;
     /*color:#3c4043;*/
@@ -7706,7 +7706,7 @@ body{
 .high-low .low{
     opacity:.9
 }
-.searchbox{
+body.dark-mode .searchbox{
     /*background:#fff;*/
     background:var(--darkmode-primary-black);
     display:flex;
@@ -7762,7 +7762,7 @@ body{
     content:'\0000a0\002022\0000a0';
     margin-right:.4rem
 }
-.headlines .meta{
+body.dark-mode .headlines .meta{
     font-size:12px;
     /*color:inherit;*/
     color:var(--darkmodegreen);
@@ -7772,7 +7772,7 @@ body{
 .switch-input {
   display: none;
 }
-.switch-label {
+body.dark-mode .switch-label {
     color: var(--darkmodegreen);
     position: relative;
     display: inline-block;
@@ -7819,7 +7819,7 @@ body{
 .switch-input:checked + .switch-label:before {
     background-color: #A5D6A7;
 }
-.switch-input:checked + .switch-label:after {
+body.dark-mode .switch-input:checked + .switch-label:after {
     background-color: var(--darkmodegreen);
     -ms-transform: translate(80%, -50%);
     -webkit-transform: translate(80%, -50%);
