@@ -1,19 +1,33 @@
-// function getZipCode() {
-// 	var txt;
-// 	var zipcode = prompt("Please enter your ZipCode:", "");
-// 	document.cookie = "Zipcode="+zipcode;
-// 	txt = document.cookie;
-// 	console.log('Cookie : ' + getCookie());
-// 	// if (zipcode == null || zipcode == "") {
-// 	// 	txt = "User cancelled the prompt.";
-// 	// } else {
-// 	// 	txt = "You entered " + zipcode + ".";
-// 	// }
-// 	get5DaysWeatherForecast(zipcode);
-// }
-
-var accuweatherAPIKey = '<API_KEY>';
-var newsapiOrgKey = '<API_KEY>';
+var corsUrl 		= 'https://cors-anywhere.herokuapp.com/';
+var zipCodeAPIKey 	= '<API_KEY>'; // https://www.zipcodeapi.com/
+var darkSkyAPIKey	= '<API_KEY>'; // https://darksky.net/dev
+var newsapiOrgKey	= '<API_KEY>'; // https://newsapi.org/
+var bookmarks		= [
+	{
+		'name': 'Reddit',
+		'url': 'https://reddit.com'
+	},
+	{
+		'name': 'Google',
+		'url': 'https://google.com'
+	},
+	{
+		'name': 'GitHub',
+		'url': 'https://github.com'
+	},
+	{
+		'name': 'YouTube',
+		'url': 'https://youtube.com'
+	},
+	{
+		'name': 'Google Photos',
+		'url': 'https://photos.google.com'
+	},
+	{
+		'name': 'Google News',
+		'url': 'https://news.google.com'
+	}
+];
 
 function setCookie(zipcode, cvalue, exdays) {
 	var d = new Date();
@@ -40,80 +54,166 @@ function getCookie(zipcode) {
 
 function checkCookie() {
 	var zipcode = getCookie("zipcode");
+
 	if (zipcode != "") {
-		alert("Zipcode : " + zipcode);
-		get5DaysWeatherForecast(zipcode);
+		console.log("Zipcode: " + zipcode);
+		// get5DaysWeatherForecast(zipcode);
 	} else {
 		zipcode = prompt("Please enter your Zipcode:", "");
 		if (zipcode != "" && zipcode != null) {
 			setCookie("zipcode", zipcode, 30);
 		}
 	}
+
 	getCityNameFromZipCode(zipcode);
 }
 
+function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var amPM = (h > 11) ? "pm" : "am";
+
+    h = today.getHours() % 12 || 12
+    m = checkTime(m);
+
+    document.getElementById('txt').innerHTML = h + ":" + m;
+    var t = setTimeout(startTime, 500);
+}
+
+function checkTime(i) {
+    return (i < 10) ? i = "0" + i : i;  // add zero in front of numbers < 10
+}
+
+function getDayOfTheWeek(today) {
+	var weekday = new Array(7);
+	weekday[0] = "Sunday";
+	weekday[1] = "Monday";
+	weekday[2] = "Tuesday";
+	weekday[3] = "Wednesday";
+	weekday[4] = "Thursday";
+	weekday[5] = "Friday";
+	weekday[6] = "Saturday";
+	var day = weekday[today.getDay()];
+	return day;
+}
+
+function getMonthOfTheYear(today) {
+	var month = new Array();
+	month[0] = "January";
+	month[1] = "February";
+	month[2] = "March";
+	month[3] = "April";
+	month[4] = "May";
+	month[5] = "June";
+	month[6] = "July";
+	month[7] = "August";
+	month[8] = "September";
+	month[9] = "October";
+	month[10] = "November";
+	month[11] = "December";
+	var mon = month[today.getMonth()];
+	return mon;
+}
+
+function timeSince(previous) {
+
+    var msPerMinute = 60 * 1000;
+    var msPerHour = msPerMinute * 60;
+    var msPerDay = msPerHour * 24;
+    var msPerMonth = msPerDay * 30;
+    var msPerYear = msPerDay * 365;
+    var current = new Date();
+
+    var elapsed = current - previous;
+
+    if (elapsed < msPerMinute) {
+         return Math.round(elapsed/1000) + ' seconds ago';   
+    }
+
+    else if (elapsed < msPerHour) {
+         return Math.round(elapsed/msPerMinute) + ' minutes ago';   
+    }
+
+    else if (elapsed < msPerDay ) {
+         return Math.round(elapsed/msPerHour ) + ' hours ago';   
+    }
+
+    else if (elapsed < msPerMonth) {
+        return 'approximately ' + Math.round(elapsed/msPerDay) + ' days ago';   
+    }
+
+    else if (elapsed < msPerYear) {
+        return 'approximately ' + Math.round(elapsed/msPerMonth) + ' months ago';   
+    }
+
+    else {
+        return 'approximately ' + Math.round(elapsed/msPerYear ) + ' years ago';   
+    }
+}
+
+function checkDate() {
+    var today = new Date();
+    var h = today.getHours();
+    var day = getDayOfTheWeek(today);
+	var mon = getMonthOfTheYear(today);
+
+    var timeOfDayArray = [
+        [0, 4, "Good night."], 
+        [5, 11, "Good morning."],
+        [12, 17, "Good afternoon."],
+        [18, 22, "Good evening."],
+        [23, 24, "Good night."]
+    ];
+
+    for(var i = 0; i < timeOfDayArray.length; i++){
+        if(h >= timeOfDayArray[i][0] && h <= timeOfDayArray[i][1]){
+            document.getElementById('salutation').innerHTML = timeOfDayArray[i][2];
+        }
+    }
+
+    document.getElementById('today').innerHTML = day + ', ' + mon + ' ' + today.getDate();
+}
+
 function getCityNameFromZipCode(zipcode) {
-	// var url = 'http://ziptasticapi.com/' + zipcode;
-	var url = 'http://dataservice.accuweather.com/locations/v1/postalcodes/search?apikey=' + accuweatherAPIKey + '=' + zipcode;
+	var url = corsUrl + 'https://www.zipcodeapi.com/rest/' + zipCodeAPIKey + '/info.json/' + zipcode + '/degrees';
 	var req = new Request(url);
+
 	fetch(req)
 		.then(function(response) {
 			return response.json();
 		})
 		.then(function(response) {
+			// console.log(response);
 			populateCityNameFromZipCode(response);
+			getCurrentWeatherCondition(response.lat, response.lng);
 		})
-		.catch((error) => {
+		.catch(function(error) {
 			console.log(error)
-			var myCityNameFromZipCodeObj = 
-			[{
-				"LocalizedName": "City",
-				"AdministrativeArea": {
-					"ID": "State"
-				}
-			}];
-			populateCityNameFromZipCode(myCityNameFromZipCodeObj);
-			alert("Dummy City Name is being displayed!");
 		});
-	getCurrentWeatherCondition(zipcode);
 }
 
 function populateCityNameFromZipCode(response) {
-	console.log("City " + response[0].LocalizedName);
-	// var node1 = document.createElement("div");
-	// node1.setAttribute("class", "card-title");
-
-	// var h2 = document.createElement("h2");
-	var h2 = document.getElementById("city-name");
-	h2.innerHTML = response[0].LocalizedName + ", " + response[0].AdministrativeArea.ID;
-	console.log(response[0].LocalizedName + ", " + response[0].AdministrativeArea.ID);
-
-	// node1.appendChild(h2);
-
-	// document.getElementById("city-name").appendChild(node1);
-	// console.log(node1);
-	
-	// var node2 = document.createElement("div");
-	// node2.setAttribute("class", "card-subtitle mb-2 text-muted");
-
-	// var hr = document.createElement("hr");
-	// node2.appendChild(hr);
-	// // node1.appendChild(node2);
-
-	// document.getElementById("city-name").appendChild(node2);
-	// console.log(node2);
+	var city = response.city;
+	console.log("City: " + city);
+	var h2 = document.getElementById("cityName");
+	h2.innerHTML = city;
 }
 
-function getCurrentWeatherCondition(zipcode) {
-	var url = 'http://dataservice.accuweather.com/currentconditions/v1/' + zipcode + '?apikey=' + accuweatherAPIKey;
+function getCurrentWeatherCondition(lat, lng) {
+	var url = corsUrl + 'https://api.darksky.net/forecast/' + darkSkyAPIKey + '/' + lat + ',' + lng;
 	var req = new Request(url);
+
 	fetch(req)
 		.then(function(response) {
 			return response.json();
 		})
 		.then(function(response) {
-			populateCurrentWeatherCondition(response);
-		}).catch((error) => {
+			// console.log(response);
+			populateCurrentWeatherCondition(response.currently);
+			populate5DaysWeatherForecast(response.daily);
+			// console.log(response);
+		}).catch(function(error) {
 			console.log(error)
 			var myCurrentWeatherConditionObj = 
 			[{
@@ -126,55 +226,6 @@ function getCurrentWeatherCondition(zipcode) {
 					}
 				
 			}];
-			populateCurrentWeatherCondition(myCurrentWeatherConditionObj);
-			alert("Dummy Current Weather is being displayed!");
-		});
-	get5DaysWeatherForecast(zipcode);
-}
-
-function populateCurrentWeatherCondition(response) {
-	// console.log("weather text" + response.WeatherText);
-	var weatherText = response[0].WeatherText;
-	var temperatureValue = response[0].Temperature.Imperial.Value;
-	var node = document.createElement("div");
-	node.setAttribute("class", "col-8");
-
-	var innerDiv1 = document.createElement("div");
-	innerDiv1.setAttribute("class", "weather-type");
-	innerDiv1.innerHTML = weatherText;
-	node.appendChild(innerDiv1);
-
-	var span = document.createElement("span");
-	span.setAttribute("class", "number");
-	span.innerHTML = temperatureValue + "&deg;<span class=\"unit\">F</span>"
-	node.appendChild(span);
-
-	document.getElementById("currentWeather").appendChild(node);
-
-	var node1 = document.createElement("div");
-	node1.setAttribute("class", "col-4");
-
-	var innerDiv2 = document.createElement("div");
-	innerDiv2.setAttribute("class", "weather-icon-current");
-	innerDiv2.setAttribute("width", "84");
-	innerDiv2.setAttribute("height", "84");
-	node1.appendChild(innerDiv2);
-
-	document.getElementById("currentWeather").appendChild(node1);
-	// console.log(node);
-}
-
-function get5DaysWeatherForecast(zipcode) {
-	var url = 'http://dataservice.accuweather.com/forecasts/v1/daily/5day/' + zipcode + '?apikey=' + accuweatherAPIKey;
-	var req = new Request(url);
-	fetch(req)
-		.then(function(response) {
-			return response.json();
-		})
-		.then(function(response) {
-			populate5DaysWeatherForecast(response);
-		}).catch((error) => {
-			console.log(error)
 			// Dummy Data if the API Doesnt work
 			var my5DaysWeatherForecastObj = {
 				"DailyForecasts": [
@@ -235,23 +286,64 @@ function get5DaysWeatherForecast(zipcode) {
 					}
 				]
 			};
+			populateCurrentWeatherCondition(myCurrentWeatherConditionObj);
 			populate5DaysWeatherForecast(my5DaysWeatherForecastObj);
-			alert("Dummy Forecast is being displayed!");
 		});
+	// get5DaysWeatherForecast(zipcode);
+}
+
+function populateCurrentWeatherCondition(response) {
+	console.log("Weather summary: " + response.summary);
+	var weatherText = response.summary;
+	var temperatureValue = Math.round(response.temperature);
+	var node = document.createElement("div");
+	node.setAttribute("class", "col-8");
+
+	var innerDiv1 = document.createElement("div");
+	innerDiv1.setAttribute("class", "weather-type");
+	innerDiv1.innerHTML = weatherText;
+	node.appendChild(innerDiv1);
+
+	var span = document.createElement("span");
+	span.setAttribute("class", "number");
+	span.innerHTML = temperatureValue + "&deg;<span class=\"unit\">F</span>"
+	node.appendChild(span);
+
+	document.getElementById("currentWeather").appendChild(node);
+
+	var node1 = document.createElement("div");
+	node1.setAttribute("class", "col-4");
+
+	var innerDiv2 = document.createElement("div");
+	innerDiv2.setAttribute("class", "weather-icon-current");
+	innerDiv2.setAttribute("width", "84");
+	innerDiv2.setAttribute("height", "84");
+	node1.appendChild(innerDiv2);
+
+	var iconImg = document.createElement("img");
+	iconImg.setAttribute("src", "assets/icons/" + response.icon + ".svg");
+	iconImg.setAttribute("title", response.summary);
+	innerDiv2.appendChild(iconImg);
+
+	document.getElementById("currentWeather").appendChild(node1);
 }
 
 function populate5DaysWeatherForecast(response) {
 	for (var i = 0; i < 5; i++) {
-		var Maximum = response.DailyForecasts[i].Temperature.Maximum.Value;
-		var Minimum = response.DailyForecasts[i].Temperature.Minimum.Value;
-		var weatherDate = response.DailyForecasts[i].Date;
+		var Maximum = Math.round(response.data[i].temperatureHigh);
+		var Minimum = Math.round(response.data[i].temperatureLow);
+		var weatherDate = response.data[i].time;
+
+		// console.log("Maximum: " + Maximum);
+		// console.log("Minimum: " + Minimum);
+		// console.log("Weather Date: " + weatherDate);
 
 		var node = document.createElement("div");
 		node.setAttribute("class", "col");
 
 		var outerSpan = document.createElement("span");
 		outerSpan.setAttribute("class", "day");
-		var date = new Date(weatherDate);
+		var date = new Date(weatherDate * 1000);
 
 		var getTodaysDate = new Date();
 		var dayOfTheWeek = getDayOfTheWeek(date);
@@ -267,9 +359,16 @@ function populate5DaysWeatherForecast(response) {
 
 		var innerDiv1 = document.createElement("div");
 		innerDiv1.setAttribute("class", "weather-icon-forecast");
-		innerDiv1.setAttribute("width", "52");
-		innerDiv1.setAttribute("height", "52");
+		innerDiv1.setAttribute("width", "39");
+		innerDiv1.setAttribute("height", "39");
 		node.appendChild(innerDiv1);
+
+		var iconImg = document.createElement("img");
+		iconImg.setAttribute("src", "assets/icons/" + response.data[i].icon + ".svg");
+		iconImg.setAttribute("width", "39");
+		iconImg.setAttribute("height", "39");
+		iconImg.setAttribute("title", response.data[i].summary);
+		innerDiv1.appendChild(iconImg);
 
 
 		var innerDiv2 = document.createElement("div");
@@ -291,14 +390,12 @@ function populate5DaysWeatherForecast(response) {
 		node.appendChild(innerDiv2);
 		// console.log(node);
 
-		document.getElementById("weatherForecastFor5Days").appendChild(node);
+		document.getElementById("weatherForecast").appendChild(node);
 	}
 }
 
 function getNews() {
-	var url = 'https://newsapi.org/v2/top-headlines?' +
-		'country=us&' +
-		'apiKey=' + newsapiOrgKey;
+	var url = 'https://newsapi.org/v2/top-headlines?sources=google-news&apiKey=' + newsapiOrgKey;
 	var req = new Request(url);
 	fetch(req)
 	.then(function(response) {
@@ -307,7 +404,7 @@ function getNews() {
 	.then(function(response) {
 		// console.log(JSON.stringify(response));
 		populateNews(response);
-	}).catch((error) => {
+	}).catch(function(error) {
 		console.log(error)
         var myNewsApiObj = {   
             "articles": [
@@ -344,7 +441,6 @@ function getNews() {
             ]
         };
         populateNews(myNewsApiObj);
-        alert("Dummy News is being displayed!");
 	});
 }
 
@@ -358,7 +454,7 @@ function populateNews(response) {
 		a.setAttribute("href", response.articles[i].url);
 		var heading = document.createElement("h5");
 		var s = response.articles[i].title
-		s = s.substring(0, s.indexOf('-'));
+		// s = s.substring(0, s.indexOf('-'));
 		var textForHeading = document.createTextNode(s);
 		heading.appendChild(textForHeading)
 		a.appendChild(heading)
@@ -371,156 +467,49 @@ function populateNews(response) {
 		span.innerHTML = response.articles[i].source.name;
 		var time = document.createElement("time");
 		var t = new Date(response.articles[i].publishedAt);
-		var hours = t.getHours();
-		var minutes = t.getMinutes();
-		var date = t.getDate();
-		var day = getDayOfTheWeek(t);
-		var month = getMonthOfTheYear(t);
-		time.innerHTML = day + " " + month + " " + date + " Published at " + hours + ":" + minutes;
+		time.innerHTML = timeSince(t);
 
 		div.appendChild(span);
 		div.appendChild(time);
 
 		node.appendChild(div);
 
-		document.getElementById("newsList").appendChild(node);
+		document.getElementById("topHeadlines").appendChild(node);
 	}
 }
 
-function startTime() {
-	var today = new Date();
-	var h = today.getHours();
-	var m = today.getMinutes();
-	var amPM = (h > 11) ? "pm" : "am";
+function populateFavicons() {
+	var url = 'https://api.faviconkit.com/';
 
-	h = today.getHours() % 12 || 12
-	m = checkTime(m);
+	for (var i = 0; i < bookmarks.length; i++) {
+		var imgSrc = bookmarks[i].url;
+		imgSrc = imgSrc.replace(/^(https?:|)\/\//, '');
+		imgSrc = url + imgSrc + "/64";
 
-	document.getElementById('txt').innerHTML = h + ":" + m;
-	var t = setTimeout(startTime, 500);
-}
+		var node = document.createElement("div");
+		node.setAttribute("class", "col");
 
-function checkTime(i) {
-	if (i < 10) {
-		i = "0" + i
-	}; // add zero in front of numbers < 10
-	return i;
-}
+		var a = document.createElement("a");
+		a.setAttribute("href", bookmarks[i].url);
 
-function getDayOfTheWeek(today) {
-	var weekday = new Array(7);
-	weekday[0] = "Sunday";
-	weekday[1] = "Monday";
-	weekday[2] = "Tuesday";
-	weekday[3] = "Wednesday";
-	weekday[4] = "Thursday";
-	weekday[5] = "Friday";
-	weekday[6] = "Saturday";
-	var day = weekday[today.getDay()];
-	return day;
-}
+		var iconImg = document.createElement("img");
+		iconImg.setAttribute("src", imgSrc);
+		iconImg.setAttribute("title", bookmarks[i].name);
+		iconImg.setAttribute("width", "32");
+		iconImg.setAttribute("height", "32");
+		iconImg.setAttribute("class", "mb-3");
+		a.appendChild(iconImg);
 
-function getMonthOfTheYear(today) {
-	var month = new Array();
-	month[0] = "January";
-	month[1] = "February";
-	month[2] = "March";
-	month[3] = "April";
-	month[4] = "May";
-	month[5] = "June";
-	month[6] = "July";
-	month[7] = "August";
-	month[8] = "September";
-	month[9] = "October";
-	month[10] = "November";
-	month[11] = "December";
-	var mon = month[today.getMonth()];
-	return mon;
-}
+		node.appendChild(a);
 
-function checkDate() {
-	var today = new Date();
-	var h = today.getHours();
-
-	var day = getDayOfTheWeek(today);
-
-	var mon = getMonthOfTheYear(today);
-
-	var timeOfDayArray = [
-		[0, 4, "Good night."],
-		[5, 11, "Good morning."],
-		[12, 17, "Good afternoon."],
-		[18, 22, "Good evening."],
-		[23, 24, "Good night."]
-	];
-
-	for (var i = 0; i < timeOfDayArray.length; i++) {
-		if (h >= timeOfDayArray[i][0] && h <= timeOfDayArray[i][1]) {
-			document.getElementById('salutation').innerHTML = timeOfDayArray[i][2];
-		}
+		document.getElementById("bookmarks").appendChild(node);
 	}
-
-	document.getElementById('today').innerHTML = day + ', ' + mon + ' ' + today.getDate();
 }
 
 window.onload = function() {
-	// getZipCode();
 	checkCookie();
 	checkDate();
 	startTime();
 	getNews();
+	populateFavicons();
 }
-
-function changeColor(tagName, color) {
-	// body...
-	var links = document.getElementsByTagName(tagName);
-	for(var i=0;i<links.length;i++){
-		if(links[i].href) {
-			links[i].style.color = color;  
-		}
-	}
-}
-
-function changeCSS(cssFile, cssLinkIndex) {
-
-    var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
-
-    var newlink = document.createElement("link");
-    newlink.setAttribute("rel", "stylesheet");
-    newlink.setAttribute("type", "text/css");
-    newlink.setAttribute("href", cssFile);
-
-    document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-	var checkbox = document.querySelector('input[type="checkbox"]');
-
-	checkbox.addEventListener('change', function () {
-		if (checkbox.checked) {
-			// Dark Mode is ON!
-			// console.log('Checked');
-			// var darkmodeGreenColor = 'var(--darkmodegreen)';
-
-			// document.body.style.backgroundColor = 'var(--iseblack)';
-			// document.body.style.color = darkmodeGreenColor; // #212529
-
-			// var aTag = 'a';
-			// changeColor(aTag, darkmodeGreenColor);
-			var cssFilePath = 'assets/build/css/darkmode.css';
-			changeCSS(cssFilePath,0);
-		} else {
-			// Dark Mode is OFF!
-			// var blackColor = 'rgba(0,0,0)';
-			// console.log('Not checked');
-			// document.body.style.backgroundColor = 'var(--white)';
-			// document.body.style.color = 'rgba(0,0,0,.87)';
-
-
-			// var aTag = 'a';
-			// changeColor(aTag, blackColor);
-			var cssFilePath = 'assets/build/css/all.min.css';
-			changeCSS(cssFilePath,0);
-		}
-	});
-});

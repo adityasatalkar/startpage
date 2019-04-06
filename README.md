@@ -3,6 +3,10 @@ A start page based on Bootstrap 4 and Material Design 2 (specifically the Google
 
 ![alt text](https://github.com/ars75/startpage/blob/master/assets/img/screenshot/screenshot-v1.png "Start Page")
 
+Contributors
+---
+[ars75](https://github.com/ars75)
+
 Dependencies
 ---
 - [Bootstrap](http://getbootstrap.com)
@@ -21,17 +25,21 @@ Setup
    `npm install`
 
 - Edit `gulpfile.js` and set `devUrl` to your local URL of choice
+- Edit `assets/src/js/site.js` and replace bookmarks with your own
 - Run `gulp`
 
 Todo
 ---
-- Allow setting of bookmarks in json config
-- Improve favicon retrieval
-- Get weather from openweathermap.org api or similar
-- Dynamically set days and weather icons
-- Pull zip code from json config for weather
-- Get Google News from https://newsapi.org/s/google-news-api
+- ~~Allow setting of bookmarks in json config~~
+- ~~Use javascript to fetch favicons and cache them~~
+- ~~Get weather from openweathermap.org api or similar~~
+- ~~Dynamically set days and weather icons~~
+- ~~Pull zip code from json config for weather~~
+- ~~Get Google News from https://newsapi.org/s/google-news-api~~
 - Experiment with vertical cards with images for news headlines
 - Consider adding autocomplete to search bar
 - Improve responsive styling (desktop only for now)
-- Improve code quality and legibility
+- ~~Improve code quality and legibility~~
+- Add options menu
+- Add Dark Mode option
+- Add option to add bookmark, saving to config file
